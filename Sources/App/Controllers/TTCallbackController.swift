@@ -8,9 +8,8 @@
 import Vapor
 
 final class TTCallbackController {
-
-
     func handleMessage(_ req: Request) throws -> Future<HTTPStatus> {
+        print("TTCallbackController handleMessage: \(req)")
         if let data = req.http.body.data {
             print(String(data: data, encoding: .utf8) ?? "n/a")
         } else {

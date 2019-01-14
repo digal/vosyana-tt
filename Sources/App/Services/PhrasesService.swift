@@ -29,7 +29,8 @@ class PhrasesService: Service {
                 return ps1.priority > ps2.priority
             })
         
-        print(self.phrases)
+        print("loaded phrase sets: \(self.privates.count) for dialogs, \(self.phrases.count) common")
+        
     }
     
     func getPhrase(for message: String, from username: String, in chatType: String) -> String? {
