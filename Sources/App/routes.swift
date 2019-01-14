@@ -13,7 +13,6 @@ public func routes(_ router: Router) throws {
     }
     
     let ttController = TTCallbackController()
-
     router.post("tt_callback", use: ttController.handleMessage)
 
     // Example of configuring a controller
