@@ -9,18 +9,29 @@ public struct BotInfo: Codable {
     }
 }
 
-public final class Credentials : Provider {
-    public let token: String
-    public let host = "test2.tamtam.chat"
+public final class Credentials: Service {
+    let token: String
+    let host: String
+    var info: BotInfo?
     
-    public var info: BotInfo?
-    
-    public init(token: String) {
+    init(token: String, host: String) {
         self.token = token
+        self.host = host
+    }
+}
+
+public final class CredentialsProvider : Provider  {
+    let credentials: Credentials
+    let token: String
+    let host = "test2.tamtam.chat"
+
+    init(token: String) {
+        self.token = token
+        self.credentials = Credentials(token: token, host: self.host)
     }
 
     public func register(_ services: inout Services) throws {
-        
+        services.register(self.credentials)
     }
     
     public func didBoot(_ container: Container) throws -> EventLoopFuture<Void> {
@@ -32,7 +43,7 @@ public final class Credentials : Provider {
                 print("response: \(resp.body)")
                 if let respData = resp.body.data,
                     let info = try? JSONDecoder().decode(BotInfo.self, from: respData) {
-                    self.info = info
+                    self.credentials.info = info
                 }
             }).map({ (resp) -> (Void) in
                 return ()
