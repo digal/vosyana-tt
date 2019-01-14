@@ -16,6 +16,7 @@ private class PhraseSetParser: NSObject, XMLParserDelegate {
     var phrases: [String]
     
     var inQuote: Bool = false
+    var currentQuote = ""
 
     override init() {
         self.name = "";
@@ -55,6 +56,7 @@ private class PhraseSetParser: NSObject, XMLParserDelegate {
             }
         } else if (elementName == "quote") {
             self.inQuote = true
+            self.currentQuote = ""
         }
     }
     
@@ -64,12 +66,15 @@ private class PhraseSetParser: NSObject, XMLParserDelegate {
                 qualifiedName qName: String?) {
         if (elementName == "quote") {
             self.inQuote = false
+            if !self.currentQuote.isEmpty {
+                self.phrases.append(currentQuote)
+            }
         }
     }
     
     func parser(_ parser: XMLParser, foundCharacters string: String) {
         if (self.inQuote) {
-            self.phrases.append(string)
+            self.currentQuote.append(string)
         }
     }
 }
