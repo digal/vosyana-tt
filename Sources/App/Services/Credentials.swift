@@ -38,7 +38,7 @@ public final class CredentialsProvider : Provider  {
         return HTTPClient.connect(scheme: .https,
                                   hostname: self.host,
                                   on: container).flatMap { (client) -> EventLoopFuture<Void> in
-            let infoRequest = HTTPRequest(method: .GET, url: "/me?access_token=\(self.token)")
+            let infoRequest = HTTPRequest(method: .POST, url: "/me?access_token=\(self.token)")
             return client.send(infoRequest).do({ (resp) in
                 print("response: \(resp.body)")
                 if let respData = resp.body.data,

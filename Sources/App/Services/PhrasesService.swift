@@ -48,13 +48,13 @@ class PhrasesService: Service {
         for ps in phraseSets {
             if randomFloat <= ps.chance {
                 if let pattern = ps.pattern {
-                    let range = NSRange(location: 0, length: message.utf8.count)
+                    let range = NSRange(location: 0, length: message.utf16.count)
                     if pattern.matches(in: message, options: [], range: range).count == 0 {
                         continue;
                     }
                 }
                 let index = Int.random(in: 0..<ps.phrases.count)
-                return ps.phrases[index]
+                return ps.phrases[index].replacingOccurrences(of: "{name}", with: username)
             }
         }
         
