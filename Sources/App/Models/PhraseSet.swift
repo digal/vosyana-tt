@@ -68,7 +68,6 @@ private class PhraseSetParser: NSObject, XMLParserDelegate {
     }
     
     func parser(_ parser: XMLParser, foundCharacters string: String) {
-        print("foundCharacters: \"\(string)\"")
         if (self.inQuote) {
             self.phrases.append(string)
         }
