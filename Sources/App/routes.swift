@@ -11,6 +11,10 @@ public func routes(_ router: Router) throws {
     router.get("hello") { req in
         return "Hello, world!"
     }
+    
+    let ttController = TTCallbackController()
+
+    router.post("tt_callback", use: ttController.handleMessage)
 
     // Example of configuring a controller
     let todoController = TodoController()
