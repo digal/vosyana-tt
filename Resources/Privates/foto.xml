@@ -1,5 +1,5 @@
-﻿<?xml version="1.0" encoding="UTF-8" ?> 
-<quotes name="all" pattern="(фото)|(фотк)|(foto)|(fotk)|(photo)|(вышли)|(пришли)" chance="1.0" priority="100">
+<?xml version="1.0" encoding="UTF-8" ?> 
+<quotes name="foto" pattern="(фото)|(фотк)|(foto)|(fotk)|(photo)|(вышли)|(пришли)" chance="1.0" priority="100">
   <quote>фотку не дам!</quote> 
   <quote>вот моя фотография - http://leprosorium.ru/warehouse/craps/xeutnkyj.jpg</quote> 
   <quote>да ну</quote> 

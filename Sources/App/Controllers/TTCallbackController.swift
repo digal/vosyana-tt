@@ -10,9 +10,6 @@ import Foundation
 
 final class TTCallbackController {
     func handleMessage(_ req: Request) throws -> Future<HTTPStatus> {
-        
-        print("TTCallbackController handleMessage: \(req)")
-        
         return try req.content.decode(Message.self).flatMap { msg in
             let reply: String?
             
@@ -43,7 +40,7 @@ final class TTCallbackController {
                                             let outgoingJson = try! JSONEncoder().encode(outgoingMessage)
                                             let msgRequest = HTTPRequest(method: .POST, url: "/messages?access_token=\(credentials.token)&chat_id=\(msg.recipient.chatId)", body: outgoingJson)
                                             return client.send(msgRequest).do({ (resp) in
-                                                print("msg send response: \(resp.body)")
+//                                                print("msg send response: \(resp.body)")
                                                 fflush(stdout)
                                             }).map({ (resp) -> (HTTPStatus) in
                                                 return .ok

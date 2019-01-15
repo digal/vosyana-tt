@@ -1,4 +1,5 @@
 import Vapor
+import Jobs
 
 public struct BotInfo: Codable {
     let name: String
@@ -35,23 +36,31 @@ public final class CredentialsProvider : Provider  {
     }
     
     public func didBoot(_ container: Container) throws -> EventLoopFuture<Void> {
+        Jobs.add(interval: .seconds(600)) {
+            try self.updateCredentials(container).catch { (err) in
+                print("error: \(err)")
+            }
+        }
+        return try self.updateCredentials(container).map { (_) -> (Void) in
+            return ()
+        }
+    }
+    
+    func updateCredentials(_ container: Container)  throws -> EventLoopFuture<HTTPResponse> {
         return HTTPClient.connect(scheme: .https,
-                                  hostname: self.host,
-                                  on: container).flatMap { (client) -> EventLoopFuture<Void> in
-            let infoRequest = HTTPRequest(method: .POST, url: "/me?access_token=\(self.token)")
-            return client.send(infoRequest).do({ (resp) in
-                print("response: \(resp.body)")
+                           hostname: self.host,
+                           on: container)
+            .flatMap { (client) -> EventLoopFuture<HTTPResponse> in
+                let infoRequest = HTTPRequest(method: .GET, url: "/me?access_token=\(self.token)")
+                return client.send(infoRequest)
+            }
+            .do { (resp) in
+                print("response: \(resp)")
                 if let respData = resp.body.data,
                     let info = try? JSONDecoder().decode(BotInfo.self, from: respData) {
                     self.credentials.info = info
                 }
-            }).map({ (resp) -> (Void) in
-                return ()
-            })
-        }
+            }
+        
     }
-    
-    
-    
-    
 }

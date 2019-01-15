@@ -43,9 +43,9 @@ class PhrasesService: Service {
             phraseSets = self.phrases
         }
         
-        let randomFloat = Float.random(in: 0..<1)
 
         for ps in phraseSets {
+            let randomFloat = Float.random(in: 0..<1)
             if randomFloat <= ps.chance {
                 if let pattern = ps.pattern {
                     let range = NSRange(location: 0, length: message.utf16.count)
