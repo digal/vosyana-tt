@@ -32,20 +32,14 @@ final class TTCallbackController {
                 print("reply: \(reply)")
             
                 let credentials = try req.make(Credentials.self)
+                let outgoingMessage = OutgoingMessage(with: reply)
+
+                return try req
+                            .client()
+                            .post("https://\(credentials.host)/messages?access_token=\(credentials.token)&chat_id=\(msg.recipient.chatId)") { (post) in
+                                try post.content.encode(outgoingMessage)
+                            }.map{ $0.http.status }
                 
-                return HTTPClient.connect(scheme: .https,
-                                          hostname: credentials.host,
-                                          on: req).flatMap { (client) -> EventLoopFuture<HTTPStatus> in
-                                            let outgoingMessage = OutgoingMessage(with: reply)
-                                            let outgoingJson = try! JSONEncoder().encode(outgoingMessage)
-                                            let msgRequest = HTTPRequest(method: .POST, url: "/messages?access_token=\(credentials.token)&chat_id=\(msg.recipient.chatId)", body: outgoingJson)
-                                            return client.send(msgRequest).do({ (resp) in
-//                                                print("msg send response: \(resp.body)")
-                                                fflush(stdout)
-                                            }).map({ (resp) -> (HTTPStatus) in
-                                                return .ok
-                                            })
-                }
             } else {
                 print("no reply")
             }
